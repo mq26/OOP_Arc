@@ -70,7 +70,8 @@ void ChooseWay(Sector* sector) {
 
 
 int main()
-{
+{/*
+#pragma region  
 	cout << "Input n: ";
 	int n;
 	cin >> n;
@@ -97,6 +98,27 @@ int main()
 	ChooseWay(sec);
 	int a = 0;
 	cin >> a;
+#pragma endregion */
+	char *RemoteAddr = getenv("REMOTE_ADDR");
+	char *ContentLength = getenv("CONTENT_LENGTH");
+	char *QueryString = getenv("QUERY_STRING"); // GET-запрос 
+
+	int NumBytes = atoi(ContentLength); // вычисляем длину данных — переводим строку в число 
+	char *Data = (char *)malloc(NumBytes + 1); // выделяем в свободной памяти буфер нужного размера 
+	fread(Data, 1, NumBytes, stdin); // читаем POST-данные из стандартного потока ввода 
+	Data[NumBytes] = 0; // добавляем нулевой код в конец строки (конец строки в C) 
+
+	printf("Content-type: text/html\n\n"); // выводим заголовок 
+
+										   // выводим документ 
+	printf("<html><body>");
+	printf("<h1>Здравствуйте. Мы знаем о вас все!</h1>");
+	printf("Ваш IP-адрес: %s<br>", RemoteAddr);
+	printf("Количество байтов данных: %d<br>", NumBytes);
+	printf("Вот параметры, которые Вы указали: %s<br>", Data);
+	printf("А вот то, что мы получили через URL: %s", QueryString);
+	printf("</body></html>");
+	//cout << "Content-type: text/html\n\nHello World!"; 
 	return 0;
 }
 
